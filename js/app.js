@@ -156,73 +156,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		//Menu cards
 
-		class MenuCards {
-			constructor(title, description, image, altImage, price, parentSelector, ...classes) {
+    class MenuCard {
+			constructor(src, alt, title, descr, price, parentSelector, ...classes) {
+					this.src = src;
+					this.alt = alt;
 					this.title = title;
-					this.description = description;
-					this.image = image;
-					this.altImage = altImage;
+					this.descr = descr;
 					this.price = price;
+					this.classes = classes;
 					this.parent = document.querySelector(parentSelector);
 					this.transfer = 27;
-					this.classes = classes;
-					this.changeToUAH(); // можно вызвать метод прямо в конструкторе
+					this.changeToUAH(); 
 			}
 
 			changeToUAH() {
-					this.price = this.price * this.transfer;
+					this.price = this.price * this.transfer; 
 			}
 
-			createCard() {
-				const element = document.createElement('div');
-				 if (this.classes.length === 0) {
-					this.classes = 'menu__item';
-					element.classList.add(this.classes);
-				 } else {
-					this.classes.forEach((className = 'menu__item') => element.classList.add(className));
-				 }
-				element.innerHTML = `
-				<img src="${this.image}" alt="${this.altImage}">
-				<h3 class="menu__item-subtitle">${this.title}</h3>
-				<div class="menu__item-descr">${this.description}</div>
-				<div class="menu__item-divider"></div>
-				<div class="menu__item-price">
-				<div class="menu__item-cost">Цена:</div>
-				<div class="menu__item-total"><span>${this.price}</span> грн/день</div>
-				</div>`;
-				this.parent.append(element);
-			};
-		
-		}
+			render() {
+					const element = document.createElement('div');
 
-		new MenuCards(
-			'Меню "Фитнес"', 'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!', 
-			'img/tabs/vegy.jpg', 
-			'vegy', 
-			'229', 
-			'.menu__field .container',
-		).createCard();
-		
-		new MenuCards(
-			'Меню "“Премиум”"',
-			'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-			'img/tabs/elite.jpg',
-			'elite',
-			'550',
-			'.menu__field .container',
-			'menu__item'
-			).createCard();
+					if (this.classes.length === 0) {
+							this.classes = "menu__item";
+							element.classList.add(this.classes);
+					} else {
+							this.classes.forEach(className => element.classList.add(className));
+					}
 
-		new MenuCards(
-			'Меню "Постное"',
-			'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-			'img/tabs/post.jpg',
-			'post',
-			'430',
-			'.menu__field .container',
-			'menu__item'
-		).createCard();
+					element.innerHTML = `
+							<img src=${this.src} alt=${this.alt}>
+							<h3 class="menu__item-subtitle">${this.title}</h3>
+							<div class="menu__item-descr">${this.descr}</div>
+							<div class="menu__item-divider"></div>
+							<div class="menu__item-price">
+									<div class="menu__item-cost">Цена:</div>
+									<div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+							</div>
+					`;
+					this.parent.append(element);
+			}
+	}
 
+		const getResource = async (url) => {
+			const res = await fetch(url);
+
+			if (!res.ok) {
+				throw new Error(`Failed to get resource from ${url}, status: ${res.status}`);
+			}
+			return await res.json();
+		};
+
+		getResource('http://localhost:3000/menu')
+			.then((data) => {
+				data.forEach(({img, altimg, title, descr, price}) => {
+					new MenuCard(img, altimg, title, descr, price, '.menu .container',).render();
+				});
+			});
 
 		// Send post mail
 		const forms = document.querySelectorAll('form');
@@ -234,48 +223,23 @@ document.addEventListener('DOMContentLoaded', () => {
 		};
 		
 		forms.forEach((e) => {
-			postDate(e);
+			bindPostDate(e);
 		});
 
-		function postDate(form) {
+		const postDate = async (url, data) => {
+			const res = await fetch(url, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: data
+			});
+
+			return await res.json();
+		};
+
+		function bindPostDate(form) {
 				form.addEventListener('submit', (event) => {
-/* 						event.preventDefault();
-
-						const statusMessage = document.createElement('div');
-						statusMessage.classList.add('status');
-						statusMessage.textContent = messages.loading;
-						form.append(statusMessage);
-
-
-						const req = new XMLHttpRequest();
-						req.open('POST', 'server.php');
-						req.setRequestHeader('Content-Type', 'application/json');
-
-						const formData = new FormData(form);
-
-						const object = {};
-
-						formData.forEach((value, key) => {
-								object[key] = value;
-						});
-
-						const json = JSON.stringify(object);
-
-						req.send(json);
-
-						req.addEventListener('load', (event) => {
-								if (req.status === 200) {
-									console.log(req.response);
-									showThanksModal(messages.success);
-									form.reset();
-									statusMessage.remove();
-								} else {
-									showThanksModal(messages.failure);
-								}
-						}); */
-
-
-						// Напишем через fetch
 						event.preventDefault();
 
 						const statusMessage = document.createElement('div');
@@ -283,30 +247,21 @@ document.addEventListener('DOMContentLoaded', () => {
 						statusMessage.textContent = messages.loading;
 						form.append(statusMessage);
 
-						const formData = new FormData(form);
+						const json = JSON.stringify(Object.fromEntries(new FormData(form).entries()));
 
-						const formObject = {};
-						formData.forEach((value, key) => {
-								formObject[key] = value;
-						});
-
-						fetch('server.php', {
-							method: 'POST',
-							headers: {
-								'Content-Type': 'application/json'
-							},
-							body: JSON.stringify(formObject)
-						})
+						postDate('http://localhost:3000/requests', json)
 						.then(data => {
-							console.log(data.text());
+							console.log(`Добалена запись: ${data.json()}`);
 							showThanksModal(messages.success);
+							setTimeout(() => {
+								statusMessage.remove();
+							}, 3000);
 						})
 						.catch(() => {
 							showThanksModal(messages.failure);
 						})
 						.finally(() => {
 							form.reset();
-							statusMessage.remove();
 						});
 
 				});
@@ -338,13 +293,6 @@ document.addEventListener('DOMContentLoaded', () => {
 					closeModal();
 			}, 4000);
 		}
-
-
-		// to databse json
-
-		fetch('http://localhost:3000/menu')
-			.then(data => data.json())
-			.then(res => console.log(res));
 
 
 });
