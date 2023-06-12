@@ -22,3 +22,11 @@
 		opacity: 1
 	}
 }
+
+.offer__slider .offer__slide {
+	display: none
+}
+
+.offer__slider .offer__slide.active {
+	display: block
+}

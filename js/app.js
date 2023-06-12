@@ -1,162 +1,145 @@
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', function() {
 
-		//Tabs
-		const tabsContent = document.querySelectorAll('.tabcontent'),
-					tabs = document.querySelectorAll('.tabheader__item'),
-					tabsParent = document.querySelector('.tabheader__items');
+	// Tabs
+	
+let tabs = document.querySelectorAll('.tabheader__item'),
+	tabsContent = document.querySelectorAll('.tabcontent'),
+	tabsParent = document.querySelector('.tabheader__items');
 
-		function hideTabsContent() { 
-			tabsContent.forEach(e => {
-				e.classList.add('hide');
-				e.classList.remove('show', 'fade');
+function hideTabContent() {
+			
+			tabsContent.forEach(item => {
+					item.classList.add('hide');
+					item.classList.remove('show', 'fade');
 			});
 
-			tabs.forEach(e => {
-					e.classList.remove('tabheader__item_active');
+			tabs.forEach(item => {
+					item.classList.remove('tabheader__item_active');
 			});
-		}
+}
 
-
-		function showTabContent(i = 0) { 
+function showTabContent(i = 0) {
 			tabsContent[i].classList.add('show', 'fade');
 			tabsContent[i].classList.remove('hide');
 			tabs[i].classList.add('tabheader__item_active');
-		}
+	}
+	
+	hideTabContent();
+	showTabContent();
 
-		hideTabsContent();
-		showTabContent();
-
-		tabsParent.addEventListener('click', (e) => {
-				const target = e.target;
-
-				if (target && target.classList.contains('tabheader__item')) {
-						tabs.forEach((tab,i) => {
-								if (target == tab) {
-									hideTabsContent();
+tabsParent.addEventListener('click', function(event) {
+	const target = event.target;
+	if(target && target.classList.contains('tabheader__item')) {
+					tabs.forEach((item, i) => {
+							if (target == item) {
+									hideTabContent();
 									showTabContent(i);
-								}
-						});
-				}
-		});
+							}
+					});
+	}
+	});
+	
+	// Timer
 
+	const deadline = '2022-06-11';
 
-		//Timer
+	function getTimeRemaining(endtime) {
+			const t = Date.parse(endtime) - Date.parse(new Date()),
+					days = Math.floor( (t/(1000*60*60*24)) ),
+					seconds = Math.floor( (t/1000) % 60 ),
+					minutes = Math.floor( (t/1000/60) % 60 ),
+					hours = Math.floor( (t/(1000*60*60) % 24) );
 
-		//создадим отправную точку (до какой даты будет идти таймер)
+			return {
+					'total': t,
+					'days': days,
+					'hours': hours,
+					'minutes': minutes,
+					'seconds': seconds
+			};
+	}
 
-		const deadline = '2023-02-28'
-
-		// функция, которая сравнивает текущее время и конечное время
-		function  getTimeRemaining(endtime) { 
-				const t = Date.parse(endtime) - new Date();
-				let days, hours, minutes, seconds;
-
-				if (t <= 0) {
-					days = 0;
-					hours = 0;
-					minutes = 0;
-					seconds = 0;
-				} else {
-					days = Math.floor(t / (1000 * 60 * 60 * 24)),
-					hours = Math.floor(t / (1000 * 60 * 60) % 24),
-					minutes = Math.floor((t / 1000 / 60) % 60),
-					seconds = Math.floor((t / 1000) % 60);
-				}
-
-
-				return {
-						'total': t,
-						'days': days,
-						'hours': hours,
-						'minutes': minutes,
-						'seconds': seconds
-				};
-		}
-
-		function getZero(num) {
-				if (num >= 0 && num < 10) {
-					return `0${num}`;
-				} else {
+	function getZero(num){
+			if (num >= 0 && num < 10) { 
+					return '0' + num;
+			} else {
 					return num;
-				}
-		}
-
-		function setTime(selector, endtime) {
-				const time = document.querySelector(selector),
-							days = time.querySelector('#days'),
-							hours = time.querySelector('#hours'),
-							minutes = time.querySelector('#minutes'),
-							seconds = time.querySelector('#seconds'),
-							timeInterval = setInterval(updateClock, 1000);
-				
-				updateClock();
-
-				function updateClock() {
-						const t = getTimeRemaining(endtime);
-
-						days.textContent = getZero(t.days);
-						hours.textContent = getZero(t.hours);
-						minutes.textContent = getZero(t.minutes);
-						seconds.textContent = getZero(t.seconds);
-
-						if (t.total <= 0) {
-							clearInterval(timeInterval);
-						}
-				}
-		}
-
-
-		setTime('.timer', deadline);
-
-
-		//Modal window
-		const openBtnsModal = document.querySelectorAll('[data-modal]'),
-					closeBtnModal = document.querySelector('[data-modalClose]'),
-					modal = document.querySelector('.modal');
-
-		function closeModal() { 
-			modal.classList.toggle('show');
-			document.body.style.overflow = 'visible';
-			modal.classList.remove('show');
-		 }
-
-		 function openModal() {
-			modal.classList.toggle('show');
-			document.body.style.overflow = 'hidden';
-			//clearInterval(modalTimerId);
-		 }
-
-		openBtnsModal.forEach(e => {
-			e.addEventListener('click', openModal);
-		});
-
-		closeBtnModal.addEventListener('click', closeModal);
-
-		modal.addEventListener('click', (e) => {
-			if (e.target === modal || e.target.getAttribute('data-close') == '') closeModal()
-		});
-
-		document.addEventListener('keydown', (e) => {
-			if (e.code === 'Escape' && modal.classList.contains('show')) closeModal()
-		});
-
-		//open modal timeout
-		//const modalTimerId = setTimeout(openModal, 10000);
-
-		function showModuleByScroll() {
-			if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-				openModal();
-				window.removeEventListener('scroll', showModuleByScroll);
 			}
-		}
+	}
 
-		window.addEventListener('scroll', showModuleByScroll);
+	function setClock(selector, endtime) {
 
+			const timer = document.querySelector(selector),
+					days = timer.querySelector("#days"),
+					hours = timer.querySelector('#hours'),
+					minutes = timer.querySelector('#minutes'),
+					seconds = timer.querySelector('#seconds'),
+					timeInterval = setInterval(updateClock, 1000);
 
+			updateClock();
 
-		//Menu cards
+			function updateClock() {
+					const t = getTimeRemaining(endtime);
 
-    class MenuCard {
+					days.innerHTML = getZero(t.days);
+					hours.innerHTML = getZero(t.hours);
+					minutes.innerHTML = getZero(t.minutes);
+					seconds.innerHTML = getZero(t.seconds);
+
+					if (t.total <= 0) {
+							clearInterval(timeInterval);
+					}
+			}
+	}
+
+	setClock('.timer', deadline);
+
+	// Modal
+
+	const modalTrigger = document.querySelectorAll('[data-modal]'),
+			modal = document.querySelector('.modal');
+
+	modalTrigger.forEach(btn => {
+			btn.addEventListener('click', openModal);
+	});
+
+	function closeModal() {
+			modal.classList.add('hide');
+			modal.classList.remove('show');
+			document.body.style.overflow = '';
+	}
+
+	function openModal() {
+			modal.classList.add('show');
+			modal.classList.remove('hide');
+			document.body.style.overflow = 'hidden';
+			clearInterval(modalTimerId);
+	}
+
+	modal.addEventListener('click', (e) => {
+			if (e.target === modal || e.target.getAttribute('data-close') == "") {
+					closeModal();
+			}
+	});
+
+	document.addEventListener('keydown', (e) => {
+			if (e.code === "Escape" && modal.classList.contains('show')) { 
+					closeModal();
+			}
+	});
+
+	const modalTimerId = setTimeout(openModal, 300000);
+
+	function showModalByScroll() {
+			if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+					openModal();
+					window.removeEventListener('scroll', showModalByScroll);
+			}
+	}
+	window.addEventListener('scroll', showModalByScroll);
+
+	// Используем классы для создание карточек меню
+	class MenuCard {
 			constructor(src, alt, title, descr, price, parentSelector, ...classes) {
 					this.src = src;
 					this.alt = alt;
@@ -197,77 +180,112 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 	}
 
-		const getResource = async (url) => {
-			const res = await fetch(url);
+		// Запрос к db.json на получение карточек
+/* 		getResource('http://localhost:3000/menu')
+			.then(data => {
+					data.forEach(({img, altimg, title, descr, price}) => {
+							new MenuCard(img, altimg, title, descr, price, ".menu .container").render();
+					});
+			}); */
 
-			if (!res.ok) {
-				throw new Error(`Failed to get resource from ${url}, status: ${res.status}`);
-			}
-			return await res.json();
-		};
-
-		getResource('http://localhost:3000/menu')
-			.then((data) => {
-				data.forEach(({img, altimg, title, descr, price}) => {
-					new MenuCard(img, altimg, title, descr, price, '.menu .container',).render();
+		// Запрос через axios
+		axios.get('http://localhost:3000/menu')
+			.then(data => {
+				data.data.forEach(({img, altimg, title, descr, price}) => {
+						new MenuCard(img, altimg, title, descr, price, ".menu .container").render();
 				});
 			});
 
-		// Send post mail
-		const forms = document.querySelectorAll('form');
+			// Добавление карточкек с использованием функции
 
-		const messages = {
-			loading: 'Загрузка',
-			success: 'Успешно отправлено!',
+				// getResource('http://localhost:3000/menu')
+				//     .then(data => createCard(data));
+
+				// function createCard(data) {
+				//     data.forEach(({img, altimg, title, descr, price}) => {
+				//         const element = document.createElement('div');
+
+				//         element.classList.add("menu__item");
+
+				//         element.innerHTML = `
+				//             <img src=${img} alt=${altimg}>
+				//             <h3 class="menu__item-subtitle">${title}</h3>
+				//             <div class="menu__item-descr">${descr}</div>
+				//             <div class="menu__item-divider"></div>
+				//             <div class="menu__item-price">
+				//                 <div class="menu__item-cost">Цена:</div>
+				//                 <div class="menu__item-total"><span>${price}</span> грн/день</div>
+				//             </div>
+				//         `;
+				//         document.querySelector(".menu .container").append(element);
+				//     });
+				// }
+
+	// Forms
+
+	const forms = document.querySelectorAll('form');
+	const message = {
+			loading: 'img/form/spinner.svg',
+			success: 'Спасибо! Скоро мы с вами свяжемся',
 			failure: 'Что-то пошло не так...'
-		};
-		
-		forms.forEach((e) => {
-			bindPostDate(e);
-		});
+	};
 
-		const postDate = async (url, data) => {
-			const res = await fetch(url, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: data
+	forms.forEach(item => {
+			bindPostData(item);
+	});
+
+	const postData = async (url, data) => {
+			let res = await fetch(url, {
+					method: "POST",
+					headers: {
+							'Content-Type': 'application/json'
+					},
+					body: data
 			});
-
+	
 			return await res.json();
-		};
+	};
 
-		function bindPostDate(form) {
-				form.addEventListener('submit', (event) => {
-						event.preventDefault();
+	async function getResource(url) {
+			let res = await fetch(url);
+	
+			if (!res.ok) {
+					throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+			}
+	
+			return await res.json();
+	}
 
-						const statusMessage = document.createElement('div');
-						statusMessage.classList.add('status');
-						statusMessage.textContent = messages.loading;
-						form.append(statusMessage);
+	function bindPostData(form) {
+			form.addEventListener('submit', (e) => {
+					e.preventDefault();
 
-						const json = JSON.stringify(Object.fromEntries(new FormData(form).entries()));
+					let statusMessage = document.createElement('img');
+					statusMessage.src = message.loading;
+					statusMessage.style.cssText = `
+							display: block;
+							margin: 0 auto;
+					`;
+					form.insertAdjacentElement('afterend', statusMessage);
+			
+					const formData = new FormData(form);
 
-						postDate('http://localhost:3000/requests', json)
-						.then(data => {
-							console.log(`Добалена запись: ${data.json()}`);
-							showThanksModal(messages.success);
-							setTimeout(() => {
-								statusMessage.remove();
-							}, 3000);
-						})
-						.catch(() => {
-							showThanksModal(messages.failure);
-						})
-						.finally(() => {
+					const json = JSON.stringify(Object.fromEntries(formData.entries()));
+
+					postData('http://localhost:3000/requests', json)
+					.then(data => {
+							console.log(data);
+							showThanksModal(message.success);
+							statusMessage.remove();
+					}).catch(() => {
+							showThanksModal(message.failure);
+					}).finally(() => {
 							form.reset();
-						});
+					});
+			});
+	}
 
-				});
-		}
-
-		function showThanksModal(message) {
+	function showThanksModal(message) {
 			const prevModalDialog = document.querySelector('.modal__dialog');
 
 			prevModalDialog.classList.add('hide');
@@ -275,25 +293,67 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			const thanksModal = document.createElement('div');
 			thanksModal.classList.add('modal__dialog');
-
 			thanksModal.innerHTML = `
-				<div class="modal__content">
-						<div class="modal__close" data-close>×</div>
-
-						<div class="modal__title">${message}</div>
-				</div>
-			`
-
+					<div class="modal__content">
+							<div class="modal__close" data-close>×</div>
+							<div class="modal__title">${message}</div>
+					</div>
+			`;
 			document.querySelector('.modal').append(thanksModal);
-
 			setTimeout(() => {
 					thanksModal.remove();
 					prevModalDialog.classList.add('show');
 					prevModalDialog.classList.remove('hide');
 					closeModal();
 			}, 4000);
+	}
+
+	// Slider
+	const slider = document.querySelector('.offer__slider'),
+				slideItems = slider.querySelectorAll('.offer__slide'),
+				prev = slider.querySelector('.offer__slider-prev'),
+				next = slider.querySelector('.offer__slider-next'),
+				totalSlides = slider.querySelector('#total'),
+				currentSlide = slider.querySelector('#current');
+
+	let slideIndex = 1;
+
+	initSlider(slideIndex, slideItems, totalSlides, currentSlide);
+
+	function initSlider(n, slides, total, current) {
+		showSlide(n, slides, current);
+
+		if (slides.length < 10) {
+			total.textContent = `0${slides.length}`;
+		} else {
+			total.textContent = slides.length
 		}
+	}
+
+	function showSlide(n, slides, current) {
+		if (n > slides.length) slideIndex = 1;
+
+		if (n < 1) slideIndex = slides.length;
+
+		
+		slides.forEach(e => e.classList.remove('active'));
+
+		slides[slideIndex - 1].classList.add('active');
+
+		if (slides.length < 10) {
+			current.textContent = slideIndex;
+		} else {
+			current.textContent = slideIndex;
+		}
+	}
+
+	function plusSlide(n, slides) {
+		showSlide(slideIndex += n, slides, current);
+	}
+
+	prev.addEventListener('click', () => plusSlide(-1, slideItems, currentSlide));
+
+	next.addEventListener('click', () => plusSlide(1, slideItems, currentSlide))
 
 
 });
-
