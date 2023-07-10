@@ -1,4 +1,4 @@
-Food Dist - Learning Native JavaScript Project
+Foods - Learning Native JavaScript Project
 ==============================================
 
 This project was created for educational purposes to learn the basics of the native JavaScript language. It also incorporates additional libraries to enhance the learning experience. The project focuses on building a website from scratch using JavaScript lessons.
