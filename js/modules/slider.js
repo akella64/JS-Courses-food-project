@@ -1,13 +1,13 @@
-function slider() {
+function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCounter, wrapper, inner}) {
 		// Slider
-		const slider = document.querySelector('.offer__slider'),
-					slideItems = slider.querySelectorAll('.offer__slide'),
-					prev = slider.querySelector('.offer__slider-prev'),
-					next = slider.querySelector('.offer__slider-next'),
-					totalSlides = slider.querySelector('#total'),
-					currentSlide = slider.querySelector('#current'),
-					sliderWrapper = slider.querySelector('.offer__slider-wrapper'),
-					sliderInner = slider.querySelector('.offer__slider-inner'),
+		const slider = document.querySelector(container),
+					slideItems = slider.querySelectorAll(slide),
+					prev = slider.querySelector(prevArrow),
+					next = slider.querySelector(nextArrow),
+					totalSlides = slider.querySelector(totalCounter),
+					currentSlide = slider.querySelector(currentCounter),
+					sliderWrapper = slider.querySelector(wrapper),
+					sliderInner = slider.querySelector(inner),
 					width = window.getComputedStyle(sliderWrapper).width,
 					paginationWrapper = document.createElement('div');
 
@@ -130,4 +130,4 @@ function slider() {
 	next.addEventListener('click', () => plusSlide(1, slideItems, currentSlide)) */
 }
 
-module.exports = slider;
+export default slider;

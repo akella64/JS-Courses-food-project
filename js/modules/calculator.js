@@ -74,8 +74,8 @@ function calculator() {
 	
 		}
 	
-		getStaticInformation('#gender div', 'calculating__choose-item_active');
-		getStaticInformation('.calculating__choose_big div', 'calculating__choose-item_active');
+		getStaticInformation('#gender', 'calculating__choose-item_active');
+		getStaticInformation('.calculating__choose_big', 'calculating__choose-item_active');
 	
 		function dynamicInformation(selector) {
 			const input = document.querySelector(selector);
@@ -109,4 +109,4 @@ function calculator() {
 		dynamicInformation('#age');
 }
 
-module.exports = calculator;
+export default calculator;
