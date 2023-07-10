@@ -1,7 +1,7 @@
 {
   "name": "food-dist",
   "version": "1.0.0",
-  "description": "",
+  "description": "This site was created for educational purposes. The site contains the necessary basics of the native Javascript language, as well as additional libraries.",
   "main": "index.js",
   "scripts": {
     "json-server": "npx json-server db.json",
