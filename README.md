@@ -75,8 +75,3 @@ The project has the following dependencies:
 *   **nodelist-foreach-polyfill**: Polyfill for the `NodeList.forEach` method.
 *   **webpack**: Module bundler.
 *   **webpack-cli**: Command-line interface for Webpack.
-
-License
--------
-
-This project is licensed under the ISC License.
