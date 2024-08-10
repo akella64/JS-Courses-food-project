@@ -1,12 +1,7 @@
 Foods - Learning Native JavaScript Project
 ==============================================
 
-This project was created for educational purposes to learn the basics of the native JavaScript language. It also incorporates additional libraries to enhance the learning experience. The project focuses on building a website from scratch using JavaScript lessons.
-
-Description
------------
-
-Food Dist is a website built using native JavaScript and various libraries. It serves as a practical platform to apply the concepts learned during JavaScript lessons. The site covers essential JavaScript fundamentals, such as DOM manipulation, event handling, AJAX requests, and more. By working on this project, you can reinforce your knowledge and gain hands-on experience in JavaScript development.
+ The site covers essential JavaScript fundamentals, such as DOM manipulation, event handling, AJAX requests, and more.
 
 Getting Started
 ---------------
